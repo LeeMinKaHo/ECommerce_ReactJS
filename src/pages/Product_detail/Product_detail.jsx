@@ -1,6 +1,22 @@
-import React from "react";
-
-export const Order_detail = () => {
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Rate,Image } from "antd";
+import { Counter } from "./Counter";
+export const Product_detail = () => {
+   const { id } = useParams(); // Lấy id từ URL
+   const [product, setProduct] = useState({});
+   useEffect(() => {
+      axios
+         .get(`https://dummyjson.com/products/${id}`)
+         .then((pro) => {
+            setProduct(pro.data);
+            console.log(pro.data);
+         })
+         .catch((e) => {
+            console.log(e);
+         });
+   }, []);
    return (
       <div class="container">
          <ul class="flex gap-2 items-center py-4">
@@ -11,98 +27,74 @@ export const Order_detail = () => {
             </li>
             <li>
                <a class="text-sm" href="#none">
-                  Bathroom /{" "}
+                  {product.category} /{" "}
                </a>
             </li>
             <li>
-               <a class="text-sm">Century Starburst Clock</a>
+               <a class="text-sm">{product.title}</a>
             </li>
          </ul>
 
          <div class="lg:grid grid-cols-5 gap-7 mt-4">
             <div class="col-span-3 flex gap-3">
-               <ul class="flex flex-col gap-4">
-                  <li class="w-[82px] cursor-pointer p-[10px] rounded-md border border-black hover:border-black transition-all">
-                     <img
-                        class="image"
-                        src="./images/img_product_thumb.avif"
-                        alt=""
-                     />
-                  </li>
-                  <li class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
-                     <img
-                        class="image"
-                        src="./images/img_product_thumb2.webp"
-                        alt=""
-                     />
-                  </li>
-                  <li class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
-                     <img
-                        class="image"
-                        src="./images/img_product_thumb4.webp"
-                        alt=""
-                     />
-                  </li>
-               </ul>
+               {/* 3 block small image */}
+               {product && product.images && product.images.length > 0 ? (
+                  <ul class="flex flex-col gap-4">
+                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-black hover:border-black transition-all">
+                        <Image
+                           width={"100%"}
+                           src={product.images[0]}
+                           class="image"
+                        />
+                     </li>
+                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
+                        <Image
+                           width={"100%"}
+                           src={product.images[0]}
+                           class="image"
+                        />
+                     </li>
+                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
+                        <Image
+                           width={"100%"}
+                           src={product.images[0]}
+                           class="image"
+                           
+                        />
+                     </li>
+                  </ul>
+               ) : (
+                  <p>Loading...</p>
+               )}
+
+               {/* Main image */}
                <div class="overflow-hidden">
                   <div class="rounded-xl overflow-hidden">
-                     <img
-                        src="./images/img_product_detail.webp"
-                        class="image"
-                        alt=""
-                     />
+                     <img src={product.thumbnail} class="image" alt="" />
                   </div>
                </div>
             </div>
+            {/* information block */}
             <div class="col-span-2 mt-6">
                <h2 class="text-xl lg:text-3xl font-semibold">
                   Century Starburst Clock
                </h2>
-               <ul class="flex items-center gap-1 mt-4">
-                  <li>
-                     <img
-                        class="size-[16px]"
-                        src="./images/ico_star_active.png"
-                        alt=""
-                     />
-                  </li>
-                  <li>
-                     <img
-                        class="size-[16px]"
-                        src="./images/ico_star_active.png"
-                        alt=""
-                     />
-                  </li>
-                  <li>
-                     <img
-                        class="size-[16px]"
-                        src="./images/ico_star_active.png"
-                        alt=""
-                     />
-                  </li>
-                  <li>
-                     <img
-                        class="size-[16px]"
-                        src="./images/ico_star_active.png"
-                        alt=""
-                     />
-                  </li>
-                  <li>
-                     <img
-                        class="size-[16px]"
-                        src="./images/ico_star_gray.png"
-                        alt=""
-                     />
-                  </li>
-               </ul>
+               {product && product.rating ? (
+                  <ul class="flex items-center gap-1 mt-4">
+                     {/* start block */}
+                     <Rate allowHalf defaultValue={product.rating}></Rate>
+                  </ul>
+               ) : (
+                  <p>Loading...</p>
+               )}
 
-               <p class="mt-3 text-xl font-semibold">$70.00</p>
+               <p class="mt-3 text-xl font-semibold">${product.price}</p>
 
                <div class="mt-2 pt-2 border-t border-gray">
                   <p class="flex items-center gap-2 mt-2">
                      <img
                         class="w-5 block animate-flicker"
-                        src="./images/ico_eye.png"
+                        src="../images/ico_eye.png"
                         alt=""
                      />
                      <span class="font-medium text-sm">
@@ -112,7 +104,7 @@ export const Order_detail = () => {
                   <p class="flex items-center gap-2 mt-4">
                      <img
                         class="w-5 block animate-zoomInOut"
-                        src="./images/ico_fire.png"
+                        src="../images/ico_fire.png"
                         alt=""
                      />
                      <span class="text-red-600 font-medium text-sm">
@@ -122,7 +114,7 @@ export const Order_detail = () => {
                   <p class="flex items-center gap-2 mt-6">
                      <img
                         class="w-5 block"
-                        src="./images/ico_checked.png"
+                        src="../images/ico_checked.png"
                         alt=""
                      />{" "}
                      <span class="text-green font-medium text-sm">
@@ -131,31 +123,11 @@ export const Order_detail = () => {
                   </p>
 
                   <p class="mt-5 text-midGray">
-                     Curabitur egestas malesuada volutpat. Nunc vel vestibulum
-                     odio, ac pellentesque lacus. Pellentesque dapibus nunc nec
-                     est imperdiet, a malesuada sem rutrum
+                    {product.description}
                   </p>
 
                   <div class="mt-6 flex items-center gap-3">
-                     <div class="flex items-center w-max relative">
-                        <button
-                           type="button"
-                           class="text-lg block text-[0px] absolute left-4"
-                        >
-                           <span class="text-2xl leading-[24px]">-</span>
-                        </button>
-                        <input
-                           type="text"
-                           class="w-[120px] h-[50px] border px-10 border-gray rounded-full text-center"
-                           value="1"
-                        />
-                        <button
-                           type="button"
-                           class="text-lg block text-[0px] absolute right-4"
-                        >
-                           <span class="text-2xl leading-[24px]">+</span>
-                        </button>
-                     </div>
+                    <Counter></Counter>
 
                      <button
                         type="button"
@@ -179,7 +151,7 @@ export const Order_detail = () => {
                         >
                            <img
                               class="w-4"
-                              src="./images/ico_reload.png"
+                              src="../images/ico_reload.png"
                               alt=""
                            />
                            Compare
@@ -192,7 +164,7 @@ export const Order_detail = () => {
                         >
                            <img
                               class="w-4"
-                              src="./images/ico_question.png"
+                              src="../images/ico_question.png"
                               alt=""
                            />
                            Question
@@ -205,7 +177,7 @@ export const Order_detail = () => {
                         >
                            <img
                               class="w-4"
-                              src="./images/ico_shipping.png"
+                              src="../images/ico_shipping.png"
                               alt=""
                            />
                            Shipping info
@@ -218,7 +190,7 @@ export const Order_detail = () => {
                         >
                            <img
                               class="w-4"
-                              src="./images/ico_share.png"
+                              src="../images/ico_share.png"
                               alt=""
                            />
                            Share
@@ -230,7 +202,7 @@ export const Order_detail = () => {
                      <div>
                         <img
                            class="block w-9"
-                           src="./images/ico_shipping2.png"
+                           src="../images/ico_shipping2.png"
                            alt=""
                         />
                      </div>
@@ -251,7 +223,7 @@ export const Order_detail = () => {
                   <div class="p-[15px] rounded-xl border border-[#dedede] flex items-start gap-3">
                      <div>
                         <img
-                           src="./images/ico_check.png"
+                           src="../images/ico_check.png"
                            class="w-6 block"
                            alt=""
                         />
@@ -277,7 +249,7 @@ export const Order_detail = () => {
                      <p class="text-sm tracking-widest">Guaranteed Checkout</p>
                      <img
                         class="block mt-3"
-                        src="./images/img_payment.avif"
+                        src="../images/img_payment.avif"
                         alt=""
                      />
                   </div>
