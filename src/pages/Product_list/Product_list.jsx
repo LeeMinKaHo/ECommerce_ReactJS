@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
 import axios from "axios";
 import { Pagination, Skeleton, Spin } from "antd";
+import { Link } from "react-router-dom";
 export const Product_list = () => {
    const dispatch = useDispatch();
    // chứa danh sách sản phẩm
@@ -11,8 +12,8 @@ export const Product_list = () => {
    const [totalItem, setTotalItem] = useState(0);
    const [fillter, setFillter] = useState({
       page: 1,
-      sortBy:"",
-      order:""
+      sortBy: "",
+      order: "",
    });
    // loading
    const [loading, setLoading] = useState(false);
@@ -23,18 +24,17 @@ export const Product_list = () => {
             params: {
                limit: 12,
                skip: (fillter.page - 1) * 12,
-               sortBy:fillter.sortBy,
-               order:fillter.order
+               sortBy: fillter.sortBy,
+               order: fillter.order,
             },
          });
          setTotalItem(response.data.total);
          setProductList(response.data.products);
          console.log(totalItem);
          console.log("đã chạy fetch product");
-         setTimeout(() =>{
+         setTimeout(() => {
             setLoading(true);
-         },2000)
-         
+         }, 2000);
       } catch (error) {
          console.error("Lỗi khi gọi API:", error);
       }
@@ -44,12 +44,12 @@ export const Product_list = () => {
    useEffect(() => {
       console.log("Đã chạy");
       fetchProductList();
-   }, [fillter.page,fillter.sortBy,fillter.order]);
+   }, [fillter.page, fillter.sortBy, fillter.order]);
 
-   const handleSortParam = async (e) =>{
-      const params = e.split("_")
-      setFillter({...fillter,sortBy:params[0],order:params[1]})
-   }
+   const handleSortParam = async (e) => {
+      const params = e.split("_");
+      setFillter({ ...fillter, sortBy: params[0], order: params[1] });
+   };
    return (
       <>
          {/* Banner */}
@@ -144,9 +144,18 @@ export const Product_list = () => {
                   {/* Sort */}
                   <div className="col-span-4 mt-6 lg:mt-0">
                      <div className="py-2 px-3 border rounded-full cursor-pointer w-max">
-                        <select onChange={(e) => handleSortParam(e.target.value)} name="" id="" className="w-full text-sm">
-                           <option value="price_asc">Price, low to hight</option>
-                           <option value="price_desc" >Price, hight to low</option>
+                        <select
+                           onChange={(e) => handleSortParam(e.target.value)}
+                           name=""
+                           id=""
+                           className="w-full text-sm"
+                        >
+                           <option value="price_asc">
+                              Price, low to hight
+                           </option>
+                           <option value="price_desc">
+                              Price, hight to low
+                           </option>
                            <option value="date_asc">Date, old to new</option>
                            <option value="date_desc">Date, new to old</option>
                            <option value="5">Best selling</option>
@@ -155,65 +164,65 @@ export const Product_list = () => {
                      {/* List product */}
 
                      <ul className="lg:grid grid-cols-3 gap-5 mt-9 space-y-3 lg:space-y-0">
-                        {
-                            loading ? (productList.map((pro) => (
-                                <li
-                                   key={pro.id}
-                                   className="mt-6 md:mt-0 text-center group relative"
-                                >
-                                   
-                                   <a
-                                      href="product-detail.html"
-                                      className="bg-red"
-                                   >
-                                      {pro.stock === 0 && (
-                                         <span className="absolute py-1 text-xs px-2 top-3 left-3 bg-black text-white rounded-xl">
-                                            Out of stock
-                                         </span>
-                                      )}
-                                      <ul className="absolute bottom-28 left-4 z-10 flex flex-col gap-3">
-                                         {/* Các nút yêu thích, reload, và tìm kiếm */}
-                                      </ul>
-                                      <div className="rounded-xl overflow-hidden bg-white lg:h-[385px]">
-                                 
-                                         <img
-                                            className="block size-full object-cover"
-                                            src={pro.thumbnail}
-                                            alt=""
-                                         />
-                                      </div>
-                                      <div className="flex justify-center items-center gap-1 mt-5">
-                                         {/* Xếp hạng sao */}
-                                      </div>
-                                      <h3 className="text-15 mt-2">
-                                         {pro.title}
-                                      </h3>
-                                      <div className="mt-2 relative h-5 overflow-hidden">
-                                         <div className="absolute left-1/2 -translate-x-1/2 group-hover:bottom-0 -bottom-5 transition-all duration-300">
-                                            <div className="flex items-center justify-center font-bold text-15 text-center">
-                                               <span className="">
-                                                  ${pro.price}
-                                               </span>
-                                            </div>
-                                            <a
-                                               href="#none"
-                                               className="uppercase text-xs font-medium tracking-widest relative"
-                                               onClick={() =>
-                                                  dispatch(
-                                                     addToCart({ id: pro.id })
-                                                  )
-                                               }
-                                            >
-                                               Add to cart
-                                            </a>
-                                         </div>
-                                      </div>
-                                   </a>
-                                </li>
-                             ))):(
-                              
-                              <Spin spinning={true}  fullscreen />
-                              )}
+                        {loading ? (
+                           productList.map((pro) => (
+                              <li
+                                 key={pro.id}
+                                 className="mt-6 md:mt-0 text-center group relative"
+                              >
+                                 <Link to={`/product/${pro.id}`}>
+                                    <a
+                                       href="product-detail.html"
+                                       className="bg-red"
+                                    >
+                                       {pro.stock === 0 && (
+                                          <span className="absolute py-1 text-xs px-2 top-3 left-3 bg-black text-white rounded-xl">
+                                             Out of stock
+                                          </span>
+                                       )}
+                                       <ul className="absolute bottom-28 left-4 z-10 flex flex-col gap-3">
+                                          {/* Các nút yêu thích, reload, và tìm kiếm */}
+                                       </ul>
+                                       <div className="rounded-xl overflow-hidden bg-white lg:h-[385px]">
+                                          <img
+                                             className="block size-full object-cover"
+                                             src={pro.thumbnail}
+                                             alt=""
+                                          />
+                                       </div>
+                                       <div className="flex justify-center items-center gap-1 mt-5">
+                                          {/* Xếp hạng sao */}
+                                       </div>
+                                       <h3 className="text-15 mt-2">
+                                          {pro.title}
+                                       </h3>
+                                       <div className="mt-2 relative h-5 overflow-hidden">
+                                          <div className="absolute left-1/2 -translate-x-1/2 group-hover:bottom-0 -bottom-5 transition-all duration-300">
+                                             <div className="flex items-center justify-center font-bold text-15 text-center">
+                                                <span className="">
+                                                   ${pro.price}
+                                                </span>
+                                             </div>
+                                             <a
+                                                href="#none"
+                                                className="uppercase text-xs font-medium tracking-widest relative"
+                                                onClick={() =>
+                                                   dispatch(
+                                                      addToCart({ id: pro.id })
+                                                   )
+                                                }
+                                             >
+                                                Add to cart
+                                             </a>
+                                          </div>
+                                       </div>
+                                    </a>
+                                 </Link>
+                              </li>
+                           ))
+                        ) : (
+                           <Spin spinning={true} fullscreen />
+                        )}
 
                         {/* {productList.map((pro) => {
                            return (
@@ -336,7 +345,7 @@ export const Product_list = () => {
                               pageSize={12}
                               showSizeChanger={false}
                               onChange={(page) => {
-                                 setLoading(false)
+                                 setLoading(false);
                                  setFillter({ ...fillter, page: page });
                               }}
                            />
