@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Rate,Image } from "antd";
-import { Counter } from "./Counter";
+import { Rate, Image } from "antd";
+import { ProductQuantitySelector } from "./ProductQuantitySelector";
 export const Product_detail = () => {
    const { id } = useParams(); // Lấy id từ URL
    const [product, setProduct] = useState({});
@@ -17,6 +17,7 @@ export const Product_detail = () => {
             console.log(e);
          });
    }, []);
+
    return (
       <div class="container">
          <ul class="flex gap-2 items-center py-4">
@@ -40,26 +41,34 @@ export const Product_detail = () => {
                {/* 3 block small image */}
                {product && product.images && product.images.length > 0 ? (
                   <ul class="flex flex-col gap-4">
-                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-black hover:border-black transition-all">
+                     <li
+                        style={{ width: "100px" }}
+                        class="w-[82px] cursor-pointer p-[10px] rounded-md border border-black hover:border-black transition-all"
+                     >
                         <Image
                            width={"100%"}
                            src={product.images[0]}
                            class="image"
                         />
                      </li>
-                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
+                     <li
+                        style={{ width: "100px" }}
+                        class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all"
+                     >
                         <Image
                            width={"100%"}
                            src={product.images[0]}
                            class="image"
                         />
                      </li>
-                     <li style={{ width: "100px" }} class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all">
+                     <li
+                        style={{ width: "100px" }}
+                        class="w-[82px] cursor-pointer p-[10px] rounded-md border border-transparent hover:border-black transition-all"
+                     >
                         <Image
                            width={"100%"}
                            src={product.images[0]}
                            class="image"
-                           
                         />
                      </li>
                   </ul>
@@ -122,19 +131,18 @@ export const Product_detail = () => {
                      </span>
                   </p>
 
-                  <p class="mt-5 text-midGray">
-                    {product.description}
-                  </p>
+                  <p class="mt-5 text-midGray">{product.description}</p>
 
                   <div class="mt-6 flex items-center gap-3">
-                    <Counter></Counter>
+                     <ProductQuantitySelector
+                        item={{
+                           id: product.id,
+                           name: product.title,
+                           price: product.price,
+                           thumbnail: product.thumbnail,
+                        }}
+                     ></ProductQuantitySelector>
 
-                     <button
-                        type="button"
-                        class="h-[50px] bg-black text-white font-semibold text-sm px-4 flex-1 rounded-full hover:bg hover:bg-white border hover:border-black hover:text-black transition-all"
-                     >
-                        Add To Cart
-                     </button>
                      <button
                         type="button"
                         class="p-4 bg-white border border-[#e6e6e6] rounded-full"
