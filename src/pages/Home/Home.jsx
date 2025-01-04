@@ -1,26 +1,11 @@
 import React from "react";
+import { Banner } from "../../components/Banner/Banner";
 
 export const Home = () => {
    return (
       <main>
-         <section class="relative overflow-hidden">
-            <img class="animate-zoomIn" src="images/img_banner.webp" alt="" />
-            <div class="absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-               <h2 class="text-xl lg:text-4xl font-bold text-white lg:leading-10 animate-slideInLeft">
-                  Harmony in Design: <br />
-                  Blending Form and Function
-               </h2>
-
-               <a
-                   style={{ animationDelay: '0.3s' }}
-                  href="#none"
-                  class="animate-slideInLeft mt-4 lg:mt-8 h-9 border border-white px-7 inline-flex items-center font-semibold text-white rounded-full text-[15px] hover:bg-white hover:text-black transition-all duration-300"
-               >
-                  Shop now
-               </a>
-            </div>
-         </section>
-
+        
+         <Banner></Banner>
          <section class="bg-gray">
             <div class="container">
                <ul class="grid grid-cols-2 lg:grid-cols-4 gap-5 items-center py-14">
@@ -117,6 +102,7 @@ export const Home = () => {
             </div>
          </section>
 
+         {/* Best Seller */}
          <section class="mt-9 lg:mt-24 pt-16 pb-8 bg-gray">
             <div class="container">
                <div class="lg:flex justify-between items-end">
@@ -513,6 +499,8 @@ export const Home = () => {
             </div>
          </section>
 
+
+         {/* Our Categories */}
          <section class="mt-9 lg:mt-24">
             <div class="container">
                <h2 class="text-3xl font-bold text-center">Our Categories</h2>
@@ -570,6 +558,7 @@ export const Home = () => {
             </div>
          </section>
 
+         {/* Experience the best */}
          <section class="pt-20 pb-20 mt-20 mb-9 lg:mb-20 bg-gray">
             <div class="container">
                <div class="lg:flex items-center justify-between">
@@ -599,6 +588,7 @@ export const Home = () => {
             </div>
          </section>
 
+         {/* New Arrivals */}
          <section class="pt-16 pb-8 bg-gray">
             <div class="container">
                <div class="lg:flex justify-between items-end">
