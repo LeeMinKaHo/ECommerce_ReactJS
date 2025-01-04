@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice";
 import axios from "axios";
-import { Pagination, Skeleton, Spin } from "antd";
+import { Pagination, Skeleton, Spin, notification } from "antd";
 import { Link } from "react-router-dom";
+import { SideBar } from "../../components/SideBar/SideBar";
 export const Product_list = () => {
    const dispatch = useDispatch();
    // chứa danh sách sản phẩm
@@ -14,13 +15,37 @@ export const Product_list = () => {
       page: 1,
       sortBy: "",
       order: "",
+      category: "",
    });
    // loading
    const [loading, setLoading] = useState(false);
+   // notify
+   const [api, contextHolder] = notification.useNotification();
+
+   const openNotificationWithIcon = (type) => {
+      if (type === "success") {
+         api[type]({
+            message: "Notification Title",
+            description: "The cart item has been successfully added.",
+         });
+      } else {
+         api[type]({
+            message: "Notification Title",
+            description: "There was an issue removing the cart item.",
+         });
+      }
+   };
    // Hàm lấy danh sách sản phẩm từ API
    const fetchProductList = async () => {
       try {
-         const response = await axios.get("https://dummyjson.com/products", {
+         let apiProduct = "https://dummyjson.com/products";
+         if (fillter.category) {
+            // Ensure `filter.category` is a string
+            apiProduct = `${apiProduct}/category/${fillter.category}`;
+         }
+         console.log(fillter.category);
+         console.log(apiProduct);
+         const response = await axios.get(apiProduct, {
             params: {
                limit: 12,
                skip: (fillter.page - 1) * 12,
@@ -44,14 +69,30 @@ export const Product_list = () => {
    useEffect(() => {
       console.log("Đã chạy");
       fetchProductList();
-   }, [fillter.page, fillter.sortBy, fillter.order]);
+   }, [fillter.page, fillter.sortBy, fillter.order, fillter.category]);
 
    const handleSortParam = async (e) => {
       const params = e.split("_");
       setFillter({ ...fillter, sortBy: params[0], order: params[1] });
    };
+
+   // hàm để lấy category thay đổi từ sidebar
+   const handleCategoryChange = (category) => {
+      setFillter({
+         ...fillter,
+         category: category,
+      }); // Cập nhật category khi chọn từ SideBar
+   };
+
+   const handleResetCategory = () => {
+      setFillter({
+         ...fillter,
+         category: "",
+      });
+   };
    return (
       <>
+         {contextHolder}
          {/* Banner */}
          <section className="relative">
             <img src="./images/img_product_list_banner.webp" alt="" />
@@ -72,77 +113,13 @@ export const Product_list = () => {
             <div className="container">
                <div className="lg:grid grid-cols-5">
                   {/* Category */}
-                  <div className="col-span-1 p-0 lg:p-4">
-                     <div className="">
-                        <h2 className="text-lg font-semibold">Category</h2>
-                        <ul className="mt-4 space-y-3">
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-black text-sm hover:text-black transition-all"
-                              >
-                                 Bathroom (6)
-                              </a>
-                           </li>
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-lightGray text-sm hover:text-black transition-all"
-                              >
-                                 Chair (7)
-                              </a>
-                           </li>
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-lightGray text-sm hover:text-black transition-all"
-                              >
-                                 Decor (17)
-                              </a>
-                           </li>
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-lightGray text-sm hover:text-black transition-all"
-                              >
-                                 Lamp (3)
-                              </a>
-                           </li>
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-lightGray text-sm hover:text-black transition-all"
-                              >
-                                 Table (9)
-                              </a>
-                           </li>
-                        </ul>
-                     </div>
-
-                     <div className="mt-5">
-                        <h2 className="text-lg font-semibold">Availability</h2>
-                        <ul className="mt-4 space-y-3">
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-black text-sm hover:text-black transition-all"
-                              >
-                                 In stock (16)
-                              </a>
-                           </li>
-                           <li>
-                              <a
-                                 href="#none"
-                                 className="font-medium text-lightGray text-sm hover:text-black transition-all"
-                              >
-                                 Out of stock (1)
-                              </a>
-                           </li>
-                        </ul>
-                     </div>
-                  </div>
-                  {/* Sort */}
+                  <SideBar
+                     onCategoryChange={handleCategoryChange}
+                     onCategoryClick={handleResetCategory}
+                  ></SideBar>
+                  {/* Main */}
                   <div className="col-span-4 mt-6 lg:mt-0">
+                     {/* Sort */}
                      <div className="py-2 px-3 border rounded-full cursor-pointer w-max">
                         <select
                            onChange={(e) => handleSortParam(e.target.value)}
@@ -171,53 +148,55 @@ export const Product_list = () => {
                                  className="mt-6 md:mt-0 text-center group relative"
                               >
                                  <Link to={`/product/${pro.id}`}>
-                                    <a
-                                       href="product-detail.html"
-                                       className="bg-red"
-                                    >
-                                       {pro.stock === 0 && (
-                                          <span className="absolute py-1 text-xs px-2 top-3 left-3 bg-black text-white rounded-xl">
-                                             Out of stock
-                                          </span>
-                                       )}
-                                       <ul className="absolute bottom-28 left-4 z-10 flex flex-col gap-3">
-                                          {/* Các nút yêu thích, reload, và tìm kiếm */}
-                                       </ul>
-                                       <div className="rounded-xl overflow-hidden bg-white lg:h-[385px]">
-                                          <img
-                                             className="block size-full object-cover"
-                                             src={pro.thumbnail}
-                                             alt=""
-                                          />
-                                       </div>
-                                       <div className="flex justify-center items-center gap-1 mt-5">
-                                          {/* Xếp hạng sao */}
-                                       </div>
-                                       <h3 className="text-15 mt-2">
-                                          {pro.title}
-                                       </h3>
-                                       <div className="mt-2 relative h-5 overflow-hidden">
-                                          <div className="absolute left-1/2 -translate-x-1/2 group-hover:bottom-0 -bottom-5 transition-all duration-300">
-                                             <div className="flex items-center justify-center font-bold text-15 text-center">
-                                                <span className="">
-                                                   ${pro.price}
-                                                </span>
-                                             </div>
-                                             <a
-                                                href="#none"
-                                                className="uppercase text-xs font-medium tracking-widest relative"
-                                                onClick={() =>
-                                                   dispatch(
-                                                      addToCart({ id: pro.id })
-                                                   )
-                                                }
-                                             >
-                                                Add to cart
-                                             </a>
-                                          </div>
-                                       </div>
-                                    </a>
+                                    {pro.stock === 0 && (
+                                       <span className="absolute py-1 text-xs px-2 top-3 left-3 bg-black text-white rounded-xl">
+                                          Out of stock
+                                       </span>
+                                    )}
+                                    <ul className="absolute bottom-28 left-4 z-10 flex flex-col gap-3">
+                                       {/* Các nút yêu thích, reload, và tìm kiếm */}
+                                    </ul>
+                                    <div className="rounded-xl overflow-hidden bg-white lg:h-[385px]">
+                                       <img
+                                          className="block size-full object-cover"
+                                          src={pro.thumbnail}
+                                          alt=""
+                                       />
+                                    </div>
+                                    <div className="flex justify-center items-center gap-1 mt-5">
+                                       {/* Xếp hạng sao */}
+                                    </div>
+                                    <h3 className="text-15 mt-2">
+                                       {pro.title}
+                                    </h3>
                                  </Link>
+                                 <div className="mt-2 relative h-5 overflow-hidden">
+                                    <div className="absolute left-1/2 -translate-x-1/2 group-hover:bottom-0 -bottom-5 transition-all duration-300">
+                                       <div className="flex items-center justify-center font-bold text-15 text-center">
+                                          <span className="">${pro.price}</span>
+                                       </div>
+                                       <a
+                                          href="#none"
+                                          className="uppercase text-xs font-medium tracking-widest relative"
+                                          onClick={() => {
+                                             dispatch(
+                                                addToCart({
+                                                   id: pro.id,
+                                                   name: pro.title,
+                                                   price: pro.price,
+                                                   thumbnail: pro.thumbnail,
+                                                })
+                                             );
+                                             console.log("hahhaaaa")
+                                             openNotificationWithIcon(
+                                                "success"
+                                             );
+                                          }}
+                                       >
+                                          Add to cart
+                                       </a>
+                                    </div>
+                                 </div>
                               </li>
                            ))
                         ) : (

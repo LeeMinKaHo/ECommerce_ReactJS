@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { removeFromCart } from "../../features/cart/cartSlice";
+import { decreaseCartQuantity, increateCartQuantity, removeFromCart } from "../../features/cart/cartSlice";
 import { Button, notification, Space } from "antd";
 export const Shopping_cart = () => {
    const [api, contextHolder] = notification.useNotification();
@@ -90,6 +90,7 @@ export const Shopping_cart = () => {
                                        <button
                                           type="button"
                                           className="text-lg block text-[0px] absolute left-4"
+                                          onClick={ () => dispatch( decreaseCartQuantity({id : cart.id}) ) }
                                        >
                                           <span className="text-2xl leading-[24px]">
                                              -
@@ -103,6 +104,7 @@ export const Shopping_cart = () => {
                                        <button
                                           type="button"
                                           className="text-lg block text-[0px] absolute right-4"
+                                          onClick={ () =>dispatch( increateCartQuantity( {id: cart.id}) )  }
                                        >
                                           <span className="text-2xl leading-[24px]">
                                              +
