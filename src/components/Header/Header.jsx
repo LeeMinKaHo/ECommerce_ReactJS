@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Avatar} from 'antd';
 export const Header = () => {
    const listMenu = [
       {
@@ -25,6 +26,7 @@ export const Header = () => {
       },
    ];
    const cart = useSelector((state) => state.cart)
+   const auth = useSelector((state) => state.auth)
    return (
       <header className="py-5 lg:py-8 sticky top-0 z-10 bg-white shadow-lg">
          <div className="container flex items-center">
@@ -82,10 +84,15 @@ export const Header = () => {
                <a href="#none" className="lg:hidden">
                   <img className="size-5" src="images/ico_search.png" alt="" />
                </a>
-               <NavLink to="/login" >
-                  <img className="size-5" src="images/ico_user.png" alt="" />
-               </NavLink>
-
+               {auth.email ? (
+        <Avatar style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}>
+          "U"
+        </Avatar>
+      ) : (
+        <NavLink to="/login">
+          <img className="size-5" src="images/ico_user.png" alt="Login" />
+        </NavLink>
+      )}
                <a href="#none" className="relative">
                   <span className="absolute -top-[8px] -right-[10px] size-[18px] bg-black text-white rounded-full text-xs grid place-items-center">
                      10
