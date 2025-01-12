@@ -11,11 +11,14 @@ export const authSlice = createSlice({
     reducers:{
         handleLogin(state,action){
             state.email = action.payload
+        },
+        handleLogOut(state,action){
+            state.email = ""
         }
     }
 })
 
 
-export const { handleLogin } = authSlice.actions
+export const { handleLogin  , handleLogOut} = authSlice.actions
 
 export default authSlice.reducer;

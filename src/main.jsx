@@ -1,6 +1,6 @@
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./pages/Root/Root.jsx";
 import { Home } from "./pages/Home/Home.jsx";
@@ -11,6 +11,7 @@ import { Product_detail } from "./pages/Product_detail/Product_detail.jsx";
 import { Shopping_cart } from "./pages/Shopping_cart/Shopping_cart.jsx";
 import { Provider } from "react-redux";
 import { store } from "./store.js";
+import { Wishlist } from "./pages/Wishlist/Wishlist.jsx";
 const router = createBrowserRouter([
    {
       path: "/",
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
             path: "/shopping-cart",
             element: <Shopping_cart></Shopping_cart>,
          },
+         {
+            path:"/wishlist",
+            element:<Wishlist></Wishlist>
+         }
       ],
       errorElement: <ErrorPage />,
    },

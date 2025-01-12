@@ -5,6 +5,7 @@ import axios from "axios";
 import { Pagination, Skeleton, Spin, notification } from "antd";
 import { Link } from "react-router-dom";
 import { SideBar } from "../../components/SideBar/SideBar";
+import {Breadcrumb} from "../../components/Banner/Breadcrumb"
 export const Product_list = () => {
    const dispatch = useDispatch();
    // chứa danh sách sản phẩm
@@ -94,20 +95,8 @@ export const Product_list = () => {
       <>
          {contextHolder}
          {/* Banner */}
-         <section className="relative">
-            <img src="./images/img_product_list_banner.webp" alt="" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-               <h2 className="text-4xl font-semibold">Products</h2>
-               <ul className="flex items-center gap-3 justify-center mt-2">
-                  <li>
-                     <a href="index.html">Home / </a>
-                  </li>
-                  <li>
-                     <a href="index.html">Products</a>
-                  </li>
-               </ul>
-            </div>
-         </section>
+         
+         <Breadcrumb name={"Products"}></Breadcrumb>
 
          <section className="pt-12 pb-12">
             <div className="container">

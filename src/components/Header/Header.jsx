@@ -1,7 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Avatar} from 'antd';
+import { useDispatch, useSelector } from "react-redux";
+import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { Avatar , Dropdown } from "antd";
+import { handleLogOut } from "../../features/auth/authSlice";
 export const Header = () => {
    const listMenu = [
       {
@@ -25,8 +27,24 @@ export const Header = () => {
          title: "Featured",
       },
    ];
-   const cart = useSelector((state) => state.cart)
-   const auth = useSelector((state) => state.auth)
+   const cart = useSelector((state) => state.cart);
+   const auth = useSelector((state) => state.auth);
+   const wishList = useSelector((state) => state.wishlist)
+   const dispatch = useDispatch();
+
+   const items = [
+      {
+        key: '1',
+        label: (
+          <a onClick={ (e)=> {
+            e.preventDefault()
+            dispatch( handleLogOut({}) )
+          } } className="text-slate-500" target="_blank" rel="noopener noreferrer" href="#">
+            Log out 
+          </a>
+        )
+      }
+    ];
    return (
       <header className="py-5 lg:py-8 sticky top-0 z-10 bg-white shadow-lg">
          <div className="container flex items-center">
@@ -85,23 +103,31 @@ export const Header = () => {
                   <img className="size-5" src="images/ico_search.png" alt="" />
                </a>
                {auth.email ? (
-        <Avatar style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}>
-          "U"
-        </Avatar>
-      ) : (
-        <NavLink to="/login">
-          <img className="size-5" src="images/ico_user.png" alt="Login" />
-        </NavLink>
-      )}
-               <a href="#none" className="relative">
+                  <Dropdown menu={{ items }} trigger={['hover']}>
+                     <Avatar
+                        style={{ backgroundColor: "#fde3cf", color: "#f56a00" }}
+                     >
+                        "U"
+                     </Avatar>
+                  </Dropdown>
+               ) : (
+                  <NavLink to="/login">
+                     <img
+                        className="size-5"
+                        src="images/ico_user.png"
+                        alt="Login"
+                     />
+                  </NavLink>
+               )}
+               <NavLink to="/wishlist" className="relative">
                   <span className="absolute -top-[8px] -right-[10px] size-[18px] bg-black text-white rounded-full text-xs grid place-items-center">
-                     10
+                     {wishList.length}
                   </span>
                   <img className="size-5" src="images/ico_heart.png" alt="" />
-               </a>
-               <NavLink to="/shopping-cart"  className="relative">
+               </NavLink>
+               <NavLink to="/shopping-cart" className="relative">
                   <span className="absolute -top-[8px] -right-[10px] size-[18px] bg-black text-white rounded-full text-xs grid place-items-center">
-                    { cart.length  }
+                     {cart.length}
                   </span>
                   <img className="size-5" src="images/ico_bag.png" alt="" />
                </NavLink>
